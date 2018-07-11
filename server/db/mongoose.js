@@ -1,7 +1,6 @@
 var mongoose = require('mongoose');
 
 var config = require('./config').get(process.env.NODE_ENV);
-console.log(process.env.NODE_ENV);
 
 mongoose.Promise = global.Promise;
 
