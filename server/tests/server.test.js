@@ -149,7 +149,7 @@ describe('PATCH /todos/:id', () => {
                 expect(res.body.todo.completed).toBe(true);
                 expect(res.body.todo.completedAt).toBeA('number');
             })
-            .end(done)
+            .end(done);
     });
 
     it('should clear completedAt when todo is not completed', (done) => {
@@ -168,7 +168,7 @@ describe('PATCH /todos/:id', () => {
                 expect(res.body.todo.completed).toBe(false);
                 expect(res.body.todo.completedAt).toNotExist();
             })
-            .end(done)
+            .end(done);
     });
 });
 
@@ -270,7 +270,7 @@ describe('POST /users/login', () => {
                     });
                     done();
                 }).catch((e) => done(e));
-            })
+            });
     });
 
     it('should reject invalid login', (done) => {
@@ -293,6 +293,25 @@ describe('POST /users/login', () => {
                     expect(user.tokens.length).toBe(0);
                     done();
                 }).catch((e) => done(e));
-            })
+            });
+    });
+});
+
+describe('DELETE /users/me/token', () => {
+    it('should remove auth token on logout', (done) => {
+        request(app)
+            .delete('/users/me/token')
+            .set('x-auth', users[0].tokens[0].token)
+            .expect(200)
+            .end((err, res) => {
+                if (err) {
+                    return done(err)
+                }
+
+                User.findById(users[0]._id).then((user) => {
+                    expect(user.tokens.length).toBe(0);
+                    done();
+                }).catch((e) => done(e));
+            });
     });
 });
